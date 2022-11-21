@@ -1,7 +1,9 @@
 from xled_plus.samples.sample_setup import *
+import hosts
 
-ctr = setup_control()
-ctr.fetch_layout()
+ctr = HighControlInterface(hosts.default)
+ctr.fetch_layout()  # this method fetches the led layout coordinates we need in the ledIsInCenter method.
+
 
 ## centerSizeIncrease should be max 1.0
 def ledIsInCenter(ledPosition, centerSizeIncrease=0.0):
@@ -27,30 +29,19 @@ def ledIsInCenter(ledPosition, centerSizeIncrease=0.0):
 
     return xBool and yBool
 
-def expandAndRetractLedColors(currentFrameNumber, ledPosition):
-    halfwayPointMovie = fullFrameNumber / 2
 
-    hueColor = (ledPosition[1] - currentFrameNumber / fullFrameNumber) % 1.0 #min 0.0, max 1.0
+movie_frames_total = 60
+movie_fps = 20
 
-    if currentFrameNumber <= halfwayPointMovie:
-        if ledIsInCenter(ledPosition, currentFrameNumber/halfwayPointMovie):
-            ledColor = hsl_color(hueColor, 1.0, 0.3)
-        else:
-            ledColor = rgb_color(0.0, 0.0, 0.0)
-    else:
-        if ledIsInCenter(ledPosition, 1-((currentFrameNumber-halfwayPointMovie)/halfwayPointMovie)):
-            ledColor = hsl_color(hueColor, 1.0, 0.3)
-        else:
-            ledColor = rgb_color(0.0, 0.0, 0.0)
-    return ledColor
+'''
+This method creates a movie with 60 frames, displayed at 20 frames per second (that means the movies will be 3seconds in length).
+The led at the center coordinate is set to green. Then for each following frame the size of what is considered the 'center' 
+is increased until the whole layout is considered the center (and every led is colored green).
+'''
+movie = ctr.make_func_movie(
+        movie_frames_total,
+        lambda currentFrameNumber: ctr.make_layout_pattern(
+            lambda ledPosition, ledIndex: rgb_color(0.0, 0.2, 0.0) if ledIsInCenter(ledPosition, currentFrameNumber/movie_frames_total) else rgb_color(0.2, 0.0, 0.0), None, True)
+    )
 
-fullFrameNumber = 60
-framerate = 20
-
-ctr.show_movie(
-    ctr.make_func_movie(
-        fullFrameNumber,
-        lambda currentFrameNumber: ctr.make_layout_pattern(lambda ledPosition, ledIndex: expandAndRetractLedColors(currentFrameNumber, ledPosition), None, True)
-    ),
-    framerate,
-)
+ctr.show_movie(movie,movie_fps) # This line uploads the movie to Twinkly, so comment if you do not want it to

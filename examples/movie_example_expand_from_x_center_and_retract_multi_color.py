@@ -1,13 +1,17 @@
 from xled_plus.samples.sample_setup import *
+import hosts
 
-ctr = setup_control()
+ctr = HighControlInterface(hosts.default)
+
 ctr.fetch_layout()
+
+movie_frames_total = 60
+movie_fps = 20
 
 ## centerSizeIncrease should be max 1.0
 def ledIsInCenter(ledPosition, centerSizeIncrease=0.0):
     centerX = ctr.layout_bounds['center'][0]
     centerY = ctr.layout_bounds['center'][1]
-    centerZ = ctr.layout_bounds['center'][2]
 
     minXLayoutBoundry = ctr.layout_bounds['bounds'][0][0]
     maxXLayoutBoundry = ctr.layout_bounds['bounds'][0][1]
@@ -25,25 +29,13 @@ def ledIsInCenter(ledPosition, centerSizeIncrease=0.0):
 
     xBool = ledPosition[0] >= minXBoundry and ledPosition[0] <= maxXBoundry
     yBool = ledPosition[1] >= minYBoundry and ledPosition[1] <= maxYBoundry
-    # xBool = pos[0] > -0.10 and pos[0] < -0.02
-    # yBool = pos[1] < 0.5 and pos[1] > 0.3
-    zBool = True
-    return xBool and yBool and zBool
 
+    return xBool and yBool
 
-## green spot in center
-# ctr.show_pattern(ctr.make_layout_pattern(
-#     lambda ledPosition, ledIndex: rgb_color(0.0, 1.0, 0.0) if ledIsInCenter(ledPosition, 0.3) else rgb_color(1.0, 0.0, 0.0), None, True)
-# )
-#
+def expandAndRetractLedColors(currentFrameNumber, ledPosition):
+    halfwayPointMovie = movie_frames_total / 2
 
-fullFrameNumber = 60
-framerate = 1
-
-def expandAndRetractLedColors(currentFrameNumber, ledPosition, ledIndex):
-    halfwayPointMovie = fullFrameNumber / 2
-
-    hueColor =  (ledPosition[1] - currentFrameNumber / fullFrameNumber) % 1.0 #min 0.0, max 1.0
+    hueColor = (ledPosition[1] - currentFrameNumber / movie_frames_total) % 1.0 #min 0.0, max 1.0
 
     if currentFrameNumber <= halfwayPointMovie:
         if ledIsInCenter(ledPosition, currentFrameNumber/halfwayPointMovie):
@@ -57,25 +49,11 @@ def expandAndRetractLedColors(currentFrameNumber, ledPosition, ledIndex):
             ledColor = rgb_color(0.0, 0.0, 0.0)
     return ledColor
 
-def expandLedColors(currentFrameNumber, ledPosition, ledIndex):
-    if ledIsInCenter(ledPosition, currentFrameNumber/fullFrameNumber):
-        ledColor = rgb_color(0.0, 0.2, 0.0)
-    else:
-        ledColor = rgb_color(0.2, 0.0, 0.0)
-    return ledColor
 
-# ctr.show_movie(
-#     ctr.make_func_movie(
-#         fullFrameNumber,
-#         lambda currentFrameNumber: ctr.make_layout_pattern(lambda ledPosition, ledIndex: expandAndRetractLedColors(currentFrameNumber, ledPosition, ledIndex), None, True)
-#     ),
-#     framerate,
-# )
+movie = ctr.make_func_movie(
+        movie_frames_total,
+        lambda currentFrameNumber: ctr.make_layout_pattern(lambda ledPosition, ledIndex: expandAndRetractLedColors(currentFrameNumber, ledPosition), None, True)
+    )
 
-ctr.show_movie(
-    ctr.make_func_movie(
-        fullFrameNumber,
-        lambda currentFrameNumber: ctr.make_layout_pattern(lambda ledPosition, ledIndex: rgb_color(0.0, 0.2, 0.0) if ledIsInCenter(ledPosition, currentFrameNumber/fullFrameNumber) else rgb_color(0.2, 0.0, 0.0), None, True)
-    ),
-    20,
-)
+
+ctr.show_movie(movie,movie_fps) # This line uploads the movie to Twinkly, so comment if you do not want it to
