@@ -1,4 +1,6 @@
 from xled_plus.samples.sample_setup import *
+
+import colours
 import hosts
 
 ctr = HighControlInterface(hosts.default)
@@ -13,13 +15,13 @@ specificLayoutShape = None
 patternList = []
 
 patterGreen = ctr.make_layout_pattern(
-    lambda ledPosition: rgb_color(0.0, 1.0, 1.0) if ledPosition[0] <= centerX else rgb_color(1.0, 0.0, 1.0)
+    lambda ledPosition: colours.teal if ledPosition[0] <= centerX else colours.pink
 )
 patternRed = ctr.make_layout_pattern(
-    lambda ledPosition: rgb_color(1.0, 0.0, 0.0) if ledPosition[1] <= centerY else rgb_color(0.0, 0.0, 1.0)
+    lambda ledPosition: colours.red if ledPosition[1] <= centerY else colours.blue
 )
 patternBlue = ctr.make_layout_pattern(
-    lambda ledPosition: rgb_color(1.0, 0.0, 0.5) if ledPosition[2] <= centerZ else rgb_color(1.0, 1.0, 1.0)
+    lambda ledPosition: colours.hot_pink if ledPosition[2] <= centerZ else colours.white
 )
 
 patternList.append(patterGreen)

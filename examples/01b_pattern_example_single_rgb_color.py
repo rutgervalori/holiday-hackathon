@@ -1,11 +1,13 @@
 from xled_plus.samples.sample_setup import *
+
+import colours
 import hosts
 
 ctr = HighControlInterface(hosts.default)
 
 
 def provideColor(position):
-    return rgb_color(1.0, 1.0, 1.0)
+    return colours.white
 
 '''
 make_layout_pattern requires a function as an argument,

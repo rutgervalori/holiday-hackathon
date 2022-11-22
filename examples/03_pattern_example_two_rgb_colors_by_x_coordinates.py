@@ -1,4 +1,5 @@
 from xled_plus.samples.sample_setup import *
+import colours
 import hosts
 
 ctr = HighControlInterface(hosts.default)
@@ -9,7 +10,7 @@ useIndex = False
 specificLayoutShape = None
 
 pattern = ctr.make_layout_pattern(
-    lambda ledPosition: rgb_color(0.0, 1.0, 1.0) if ledPosition[0]<=centerX else rgb_color(1.0, 0.0, 1.0), specificLayoutShape, useIndex)
+    lambda ledPosition: colours.teal if ledPosition[0]<=centerX else colours.pink, specificLayoutShape, useIndex)
 
 ctr.show_pattern(pattern)  # This line uploads the pattern to Twinkly, so comment if you do not want it to
 

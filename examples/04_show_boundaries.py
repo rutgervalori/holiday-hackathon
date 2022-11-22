@@ -1,5 +1,6 @@
 from xled_plus.samples.sample_setup import *
 import hosts
+import colours
 
 ctr = HighControlInterface(hosts.default)
 
@@ -45,26 +46,26 @@ def ledMaxZBoundAdjecent(ledPosition, margin=0.1):
 
 
 def returnColorForLedByBound(frameNumber, ledPosition):
-    ledColor = rgb_color(0.2, 0.0, 0.0)  # red
+    ledColor = colours.red  # red
     print("Pos is: "+"X:"+ str(ledPosition[0])+", Y:"+ str(ledPosition[1])+", Z:"+ str(ledPosition[2]))
     if frameNumber <= 5:
         if ledMinXBoundAdjecent(ledPosition, 0.2):
-            ledColor = rgb_color(0.0, 0.2, 0.0)  # green
+            ledColor = colours.green
     if frameNumber > 5 and frameNumber <= 10:
         if ledMaxXBoundAdjecent(ledPosition, 0.2):
-            ledColor = rgb_color(0.0, 0.0, 0.2)  # blue
+            ledColor = colours.blue
     if frameNumber > 10 and frameNumber <= 15:
         if ledMaxYBoundAdjecent(ledPosition, 0.2):
-            ledColor = rgb_color(255/255, 136/255, 0) # orange
+            ledColor = colours.lime
     if frameNumber > 15 and frameNumber <= 20:
         if ledMinYBoundAdjecent(ledPosition, 0.2):
-            ledColor = rgb_color(0.2, 0.9, 1.0) # turqoise
+            ledColor = colours.teal
     if frameNumber > 20 and frameNumber <= 25:
         if ledMaxZBoundAdjecent(ledPosition, 0.4):
-            ledColor = rgb_color(255/255, 0, 166/255)  # pink
+            ledColor = colours.pink  # pink
     if frameNumber > 25 and frameNumber <= 30:
         if ledMinZBoundAdjecent(ledPosition, 0.2):
-            ledColor = rgb_color(187/255, 0, 255/255) # purple?
+            ledColor = colours.purple
     return ledColor
 
 style = None #'square', 'rect', 'centered', 'cylinder', 'sphere'

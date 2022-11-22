@@ -5,6 +5,8 @@ Speed should be high when using more colors
 """
 
 from xled_plus.samples.sample_setup import *
+
+import colours
 from effects.RotateOnYAxisEffect import RotateOnYAxisEffect
 import hosts
 
@@ -12,7 +14,7 @@ ctr = HighControlInterface(hosts.default)
 
 
 def getListColor(i):
-    return rgb_color(0.0, 1.0, 0.0) if i == 0 else rgb_color(0.0, 0.0, 0.0)
+    return colours.green if i == 0 else colours.black
 
 def createColorList():
     listLength = int(ctr.num_leds/16)

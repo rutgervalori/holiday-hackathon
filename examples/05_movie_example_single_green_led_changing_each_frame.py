@@ -1,4 +1,6 @@
 from xled_plus.samples.sample_setup import *
+
+import colours
 import hosts
 
 ctr = HighControlInterface(hosts.default)
@@ -9,7 +11,7 @@ class ChangingLedColorByIndex:
         self.currentFrameNumber = 0
 
     def decideLedColorBasedOnIndex(self, ledPosition, ledIndex):
-        return rgb_color(0.0, 1.0, 0.0) if ledIndex == self.currentFrameNumber else rgb_color(1.0, 0.0, 1.0)
+        return colours.green if ledIndex == self.currentFrameNumber else colours.pink
 
     def createPatternForFrame(self, frameNumber):
         useIndex = True

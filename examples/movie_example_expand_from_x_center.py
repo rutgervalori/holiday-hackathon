@@ -1,4 +1,6 @@
 from xled_plus.samples.sample_setup import *
+
+import colours
 import hosts
 
 ctr = HighControlInterface(hosts.default)
@@ -41,7 +43,7 @@ is increased until the whole layout is considered the center (and every led is c
 movie = ctr.make_func_movie(
         movie_frames_total,
         lambda currentFrameNumber: ctr.make_layout_pattern(
-            lambda ledPosition, ledIndex: rgb_color(0.0, 0.2, 0.0) if ledIsInCenter(ledPosition, currentFrameNumber/movie_frames_total) else rgb_color(0.2, 0.0, 0.0), None, True)
+            lambda ledPosition, ledIndex: colours.green if ledIsInCenter(ledPosition, currentFrameNumber/movie_frames_total) else rgb_color(0.2, 0.0, 0.0), None, True)
     )
 
 ctr.show_movie(movie,movie_fps) # This line uploads the movie to Twinkly, so comment if you do not want it to

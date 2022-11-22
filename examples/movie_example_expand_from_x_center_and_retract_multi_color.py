@@ -1,4 +1,6 @@
 from xled_plus.samples.sample_setup import *
+
+import colours
 import hosts
 
 ctr = HighControlInterface(hosts.default)
@@ -41,12 +43,12 @@ def expandAndRetractLedColors(currentFrameNumber, ledPosition):
         if ledIsInCenter(ledPosition, currentFrameNumber/halfwayPointMovie):
             ledColor = hsl_color(hueColor, 1.0, 0.3)
         else:
-            ledColor = rgb_color(0.0, 0.0, 0.0)
+            ledColor = colours.black
     else:
         if ledIsInCenter(ledPosition, 1-((currentFrameNumber-halfwayPointMovie)/halfwayPointMovie)):
             ledColor = hsl_color(hueColor, 1.0, 0.3)
         else:
-            ledColor = rgb_color(0.0, 0.0, 0.0)
+            ledColor = colours.black
     return ledColor
 
 
